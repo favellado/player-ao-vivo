@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Player Blindagem Local</title>
+    <title>Player Inteligente Híbrido</title>
     <style>
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
@@ -10,6 +10,7 @@
             overflow: hidden;
         }
 
+        /* Sua moldura padrão perfeita de 750x420 */
         .youtube-box {
             width: 750px;   
             height: 420px;  
@@ -21,28 +22,91 @@
         }
 
         iframe { 
-            width: 100%; height: 100%; border: none; position: absolute; top: 0px; left: 0px;      
+            width: 100%;
+            height: 100%;
+            border: none;
+            position: absolute;
+            top: 0px;       
+            left: 0px;      
+            display: none; /* Só aparece se passar no teste de redirecionamento */
         }
 
-        /* Esconde totalmente o iframe de sacrifício */
-        #iframe_sacrificio {
-            width: 1px; height: 1px; opacity: 0; pointer-events: none;
+        #status-tela {
+            position: absolute;
+            color: #333;
+            font-family: sans-serif;
+            font-size: 14px;
+            z-index: 10;
         }
     </style>
 </head>
 <body>
 
-    <div class="youtube-box">
-        <iframe id="iframe_sacrificio" name="_top"></iframe>
-
+    <div class="youtube-box" id="player-container">
+        <div id="status-tela"></div>
+        
         <iframe 
-            src="https://www.google.com.br" 
+            id="live_stream" 
             scrolling="no" 
-            sandbox="allow-scripts allow-same-origin allow-forms"
+            sandbox="allow-scripts allow-same-origin allow-forms" 
             allow="autoplay; encrypted-media" 
             allowfullscreen>
         </iframe>
     </div>
+
+    <script>
+        /* COLOQUE O LINK AQUI:
+          - Pode ser o link normal: "https://www.fctv33hd.mom/..."
+          - Ou ele criptografado em Base64: "aHR0cHM6Ly93d3cuZmN0djMzaGQu..."
+        */
+        var entradaLink = "aHR0cHM6Ly93d3cuZmN0djMzaGQubW9tL2JyL3ZvbGxleWJhbGwvbmF0aW9ucy1sZWFndWUtd29tZW4tbWF0Y2gtMjE4NDUxMS90dXJrZXktd29tZW4tdnMtY2hpbmEtd29tZW4tMDYtMjAyNi5odG1s"; 
+        var iframe = document.getElementById('live_stream');
+        var statusTela = document.getElementById('status-tela');
+
+        // Função interna para processar e decodificar o link se necessário
+        function processarLink(input) {
+            input = input.trim();
+            
+            // Se já começar com http:// ou https://, é um link comum
+            if (input.startsWith('http://') || input.startsWith('https://')) {
+                return input;
+            }
+            
+            // Caso contrário, tenta decodificar da Base64
+            try {
+                var linkDecodificado = atob(input);
+                if (linkDecodificado.startsWith('http://') || linkDecodificado.startsWith('https://')) {
+                    return linkDecodificado;
+                }
+            } catch (e) {
+                console.error("Erro: O texto inserido não é um link válido nem uma Base64 correta.");
+            }
+            return null;
+        }
+
+        // Obtém a URL final resolvida
+        var urlFinal = processarLink(entradaLink);
+
+        if (urlFinal) {
+            // Roda a sua validação blindada contra o chute do servidor
+            fetch(urlFinal, { 
+                method: 'GET',
+                redirect: 'error' 
+            })
+            .then(function(response) {
+                iframe.src = urlFinal;
+                iframe.style.display = 'block';
+            })
+            .catch(function(err) {
+                console.log("Transmissão encerrada ou link inválido.");
+                iframe.src = "";
+                iframe.style.display = 'none';
+            });
+        } else {
+            // Se a entrada for totalmente inválida, mantém no breu
+            iframe.style.display = 'none';
+        }
+    </script>
 
 </body>
 </html>
