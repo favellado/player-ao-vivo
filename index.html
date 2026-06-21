@@ -55,30 +55,47 @@
     </div>
 
     <script>
-        var entradaLink = "aHR0cHM6Ly93d3cuZmN0djMzaGQubW9tL2JyL2Jhc2ViYWxsL21ham9yLWxlYWd1ZS1iYXNlYmFsbC1tYXRjaC0yMTg0NDU4L2F0bGFudGEtYnJhdmVzLXZzLW1pbHdhdWtlZS1icmV3ZXJzLTA2LTIwMjYuaHRtbA=="; 
+        // COLOQUE O LINK OU A BASE64 AQUI
+        var entradaLink = "https://www.google.com.br"; 
+
         var iframe = document.getElementById('live_stream');
+
         function processarLink(input) {
             if (!input) return null;
+            
+            // Remove espaços em branco, quebras de linha e tabulações das pontas
             input = input.trim().replace(/\s/g, '');
+            
+            // Se já for um link direto válido, usa ele
             if (input.startsWith('http://') || input.startsWith('https://')) {
                 return input;
             }
+            
+            // Tenta decodificar assumindo que é Base64
             try {
                 var linkDecodificado = atob(input);
+                // Remove possíveis espaços gerados na decodificação
                 linkDecodificado = linkDecodificado.trim();
+                
                 if (linkDecodificado.startsWith('http://') || linkDecodificado.startsWith('https://')) {
                     return linkDecodificado;
                 }
             } catch (e) {
                 console.log("A entrada não é uma Base64 válida, tratando como texto comum.");
             }
+            
+            // Se falhar na Base64 mas o input original contiver a estrutura de um link, tenta usá-lo
             if (input.includes('://')) {
                 return input;
             }
+            
             return null;
         }
+
         var urlFinal = processarLink(entradaLink);
+
         if (urlFinal) {
+            // Roda a sua validação blindada que deu certo na versão anterior
             fetch(urlFinal, { 
                 method: 'GET',
                 redirect: 'error' 
@@ -96,5 +113,6 @@
             iframe.style.display = 'none';
         }
     </script>
+
 </body>
 </html>
