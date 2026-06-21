@@ -2,45 +2,46 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Player Recortado YouTube</title>
+    <title>Player Blindagem Local</title>
     <style>
-        /* Centraliza o player na tela preta */
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
             background: #000; display: flex; justify-content: center; align-items: center; 
             overflow: hidden;
         }
 
-        /* Moldura no tamanho padrão de um player do YouTube (16:9) */
         .youtube-box {
-            width: 750px;   /* Largura padrão YouTube 480p/720p */
-            height: 420px;  /* Altura padrão YouTube */
+            width: 750px;   
+            height: 420px;  
             position: relative;
-            overflow: hidden; /* Tudo o que estiver fora desse quadrado some */
+            overflow: hidden; 
             background: #000;
             border: 2px solid #222;
             box-shadow: 0px 0px 15px rgba(0,0,0,0.7);
         }
 
-        /* O truque do corte: movemos o site para esconder o topo e as laterais lixo */
         iframe { 
-            width: 100%;
-            height: 100%;
-            border: none;
-            position: absolute;
-            
-            /* Ajuste estes valores se o player do jogo não ficar centralizado: */
-            top: 0px;       
-            left: 0px;      
-            
-            transform: scale(1.0); /* Zoom se precisar expandir o player */
+            width: 100%; height: 100%; border: none; position: absolute; top: 0px; left: 0px;      
+        }
+
+        /* Esconde totalmente o iframe de sacrifício */
+        #iframe_sacrificio {
+            width: 1px; height: 1px; opacity: 0; pointer-events: none;
         }
     </style>
 </head>
 <body>
 
     <div class="youtube-box">
-        <iframe src="https://www.fctv33hd.mom/br/others/us-open-championship-2026---golf-match-1978873/world-feed-jornada-4-parte-1-06-2026.html" scrolling="no"></iframe>
+        <iframe id="iframe_sacrificio" name="_top"></iframe>
+
+        <iframe 
+            src="https://www.google.com.br" 
+            scrolling="no" 
+            sandbox="allow-scripts allow-same-origin allow-forms"
+            allow="autoplay; encrypted-media" 
+            allowfullscreen>
+        </iframe>
     </div>
 
 </body>
