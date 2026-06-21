@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Player Inteligente Híbrido</title>
+    <title>Player Inteligente Híbrido Corrigido</title>
     <style>
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; 
@@ -55,40 +55,30 @@
     </div>
 
     <script>
-        /* COLOQUE O LINK AQUI:
-          - Pode ser o link normal: "https://www.fctv33hd.mom/..."
-          - Ou ele criptografado em Base64: "aHR0cHM6Ly93d3cuZmN0djMzaGQu..."
-        */
-        var entradaLink = "aHR0cHM6Ly93d3cuZmN0djMzaGQubW9tL2JyL3ZvbGxleWJhbGwvbmF0aW9ucy1sZWFndWUtd29tZW4tbWF0Y2gtMjE4NDUxMS90dXJrZXktd29tZW4tdnMtY2hpbmEtd29tZW4tMDYtMjAyNi5odG1s"; 
+        var entradaLink = "aHR0cHM6Ly93d3cuZmN0djMzaGQubW9tL2JyL2Jhc2ViYWxsL21ham9yLWxlYWd1ZS1iYXNlYmFsbC1tYXRjaC0yMTg0NDU4L2F0bGFudGEtYnJhdmVzLXZzLW1pbHdhdWtlZS1icmV3ZXJzLTA2LTIwMjYuaHRtbA=="; 
         var iframe = document.getElementById('live_stream');
-        var statusTela = document.getElementById('status-tela');
-
-        // Função interna para processar e decodificar o link se necessário
         function processarLink(input) {
-            input = input.trim();
-            
-            // Se já começar com http:// ou https://, é um link comum
+            if (!input) return null;
+            input = input.trim().replace(/\s/g, '');
             if (input.startsWith('http://') || input.startsWith('https://')) {
                 return input;
             }
-            
-            // Caso contrário, tenta decodificar da Base64
             try {
                 var linkDecodificado = atob(input);
+                linkDecodificado = linkDecodificado.trim();
                 if (linkDecodificado.startsWith('http://') || linkDecodificado.startsWith('https://')) {
                     return linkDecodificado;
                 }
             } catch (e) {
-                console.error("Erro: O texto inserido não é um link válido nem uma Base64 correta.");
+                console.log("A entrada não é uma Base64 válida, tratando como texto comum.");
+            }
+            if (input.includes('://')) {
+                return input;
             }
             return null;
         }
-
-        // Obtém a URL final resolvida
         var urlFinal = processarLink(entradaLink);
-
         if (urlFinal) {
-            // Roda a sua validação blindada contra o chute do servidor
             fetch(urlFinal, { 
                 method: 'GET',
                 redirect: 'error' 
@@ -103,10 +93,8 @@
                 iframe.style.display = 'none';
             });
         } else {
-            // Se a entrada for totalmente inválida, mantém no breu
             iframe.style.display = 'none';
         }
     </script>
-
 </body>
 </html>
